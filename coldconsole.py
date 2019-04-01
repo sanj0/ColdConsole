@@ -6,13 +6,13 @@ protectedFiles = [SYSdrive]
 commands = {
 "read":"read()",
 "help":"for i in commands.keys():print(i)",
-"createdisk":"i=input('Disk: ');createdisk(i)",
+"createdisk":"i=input('Disk: ');createdisk(i);leave()",
 "disks":"for drive in drives: print(drive)",
 "sysinfo":"sysinfo()",
 "CUN":"i = input('Name: ');CUN(i)",
 "mkfile":"mkfile()",
 "ls":"ls()",
-"del":"i = input('File: ');DEL(i)",
+"del":"DEL()",
 "clear":"clear()",
 "shutdown":"leave();exit()",
 "reboot":"leave();Boot()",
@@ -192,11 +192,24 @@ def createdisk(i):
 def sysinfo():
     print("Processor: "+platform.processor())
 
-def DEL(i):
-    if not i in protectedFiles:
-        os.system('del '+i)
+def DEL():
+    i = input("Disk: ")
+
+    if i in drives:
+        i += ".VD"
+        j = input("Filename: ")
+
+        with open(i,"r") as f:
+            exec("ddata="+f.read(),globals())
+            f.close()
+
+        del ddata[j]
+
+        with open(i,"w") as f:
+            f.write(str(ddata))
+            f.close()
     else:
-        print("This is a protected File! Access denied!")
+        print("Disk not found!")
 
 def CUN(i):
     SYSData[0] = i
