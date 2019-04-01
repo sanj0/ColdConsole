@@ -15,7 +15,24 @@ commands = {
 "del":"i = input('File: ');DEL(i)",
 "clear":"clear()",
 "shutdown":"leave();exit()",
-"reboot":"leave();Boot()"
+"reboot":"leave();Boot()",
+"man":"i = input('Command: ');man(i)"
+}
+
+# short descriptions for the commands, you can access them using "man"
+manuals = {
+"read":"reads out the contents of a file on a disk.",
+"help":"lists all commands.",
+"createdisk":"creates a new virtual disk.",
+"disks":"prints out the names of all disks.",
+"sysinfo":"print out system info.",
+"CUN":"renames the user.",
+"mkfile":"creates a new file.",
+"ls":"lists files of a disk",
+"del":"deletes a file.",
+"clear":"clears the screen.",
+"shutdown":"shuts ColdConsole down.",
+"reboot":"reboots ColdConsole.",
 }
 
 def read():
@@ -193,13 +210,25 @@ def leave():
         f.close()
 
 def commandparser(cmd):
-    if not cmd.replace(" ","") == "":
+    cmd = cmd.replace(" ", "");
+    if not cmd == "":
         for Key in commands.keys():
-            if cmd.replace(" ","") == Key:
+            if cmd == Key:
                 exec(commands[Key])
                 return True
                 break
         else:
             print("Can't find command: "+cmd)
+
+def man(command):
+    command = command.replace(" ", "");
+    if not command == "":
+        for Key in manuals.keys():
+            if command == Key:
+                print(manuals[Key])
+                return True
+                break
+        else:
+            print("Can't find command: " + command)
 
 Boot()
