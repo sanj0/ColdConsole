@@ -212,10 +212,13 @@ def DEL():
         print("Disk not found!")
 
 def CUN(i):
-    SYSData[0] = i
-    with open(SYSdrive,"w") as f:
-        f.write(str(SYSData)+";"+str(drives))
-        f.close()
+    if not i == "":
+        SYSData[0] = i
+        with open(SYSdrive,"w") as f:
+            f.write(str(SYSData)+";"+str(drives))
+            f.close()
+    else:
+        print("That is not a valid username.");
 
 def leave():
     with open(SYSdrive,"w") as f:
