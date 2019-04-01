@@ -21,19 +21,18 @@ commands = {
 
 # short descriptions for the commands, you can access them using "man"
 manuals = {
-"read":"reads something (FIXME!).",
+"read":"reads out the contents of a file on a disk.",
 "help":"lists all commands.",
 "createdisk":"creates a new virtual disk.",
 "disks":"prints out the names of all disks.",
 "sysinfo":"print out system info.",
-"CUN":"cuns something (FIXME!).",
+"CUN":"renames the user.",
 "mkfile":"creates a new file.",
-"ls":"lists files (FIXME!).",
+"ls":"lists files of a disk",
 "del":"deletes a file.",
-"clear":"clears something (FIXME!).",
+"clear":"clears the screen.",
 "shutdown":"shuts ColdConsole down.",
 "reboot":"reboots ColdConsole.",
-"man":"read a brief description of a command."
 }
 
 def read():
