@@ -193,9 +193,10 @@ def leave():
         f.close()
 
 def commandparser(cmd):
-    if not cmd.replace(" ","") == "":
+    cmd = cmd.replace(" ", "");
+    if not cmd == "":
         for Key in commands.keys():
-            if cmd.replace(" ","") == Key:
+            if cmd == Key:
                 exec(commands[Key])
                 return True
                 break
