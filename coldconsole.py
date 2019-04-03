@@ -17,7 +17,7 @@ commands = {
     "clear": "clear()",
     "shutdown": "leave();exit()",
     "reboot": "leave();Boot()",
-    "man": "i = input('Command: ');man(i)"
+    "man": "man()"
 }
 
 # short descriptions for the commands, you can access them using "man"
@@ -34,6 +34,7 @@ manuals = {
     "clear": "clears the screen.",
     "shutdown": "shuts ColdConsole down.",
     "reboot": "reboots ColdConsole.",
+    "man": "prints a short manual of the given command."
 }
 
 # the last args that the user gave
@@ -42,7 +43,6 @@ args = []
 
 def read():
     i = get_arg_value("-d")
-    print(i)
     if i in drives:
         i += ".VD"
         j = get_arg_value("-f")
@@ -54,7 +54,7 @@ def read():
         print(ddata[j])
 
     else:
-        print("Disk" + i + " not found!")
+        print("Disk " + i + " not found!")
 
 
 def mkfile():
@@ -252,15 +252,15 @@ def commandparser(cmd):
         # the actual command is the first entity in the array
         command = cmdParts[0]
 
-        # make sure that the actualy command is not taken as an argument
+        # make sure that the actually command is not taken as an argument
         index = 0
 
         for part in cmdParts:
             index += 1
-            if index != 1:
+            if index == 1:
                 continue
             else:
-                args.append(cmdParts[index - 1])
+                args.append(part)
 
         for Key in commands.keys():
             if command == Key:
@@ -271,14 +271,14 @@ def commandparser(cmd):
             print("Can't find command: " + command)
 
 
-def man(command):
-    command = command.replace(" ", "");
+def man():
+    command = args[0]
+    command = command.replace(" ", "")
     if not command == "":
         for Key in manuals.keys():
             if command == Key:
                 print(manuals[Key])
                 return True
-                break
         else:
             print("Can't find command: " + command)
 
@@ -287,7 +287,6 @@ def man(command):
 def get_arg_value(key):
     key_passed = False
     for arg in args:
-        print("Checking " + arg)
         if key_passed:
             return arg
         elif arg == key:
