@@ -35,6 +35,7 @@ manuals = {
 "reboot":"reboots ColdConsole.",
 }
 
+# read file from disk
 def read():
     i = input("Disk: ")
     if i in drives:
@@ -49,6 +50,7 @@ def read():
     else:
         print("Disk not found!")
 
+# make a file on disk
 def mkfile():
     i = input("Disk: ")
     if i == 'exit':
@@ -74,18 +76,21 @@ def mkfile():
     else:
         print("Disk not found!")
 
+# list files on disk        
 def ls():
     i = input("Disk: ")
     with open(i+".VD","r") as f:
         exec("for i in {}.keys(): print(i)".format(f.read()))
         f.close()
 
+# clear screen        
 def clear():
     if ostype != "Windows":
         os.system("clear")
     else:
         os.system("cls")
 
+# Boot from System        
 def Boot():
     try:
         clear()
@@ -105,7 +110,7 @@ def Boot():
         clear()
         coldrescue()
 
-
+# Error rescue
 def coldrescue():
     print("██████████████████████████████████████████████████████████████████████")
     print("████                                                              ████")
@@ -140,6 +145,7 @@ def coldrescue():
         else:
             print("Can't find command: "+cmd)
 
+# ColdConsole            
 def OS():
     global drives
     global SYSData
@@ -181,6 +187,7 @@ def OS():
         print(str(e))
         coldrescue()
 
+# make a Disk        
 def createdisk(i):
     if not i.replace(" ","") == "":
         if not i in drives:
@@ -189,9 +196,11 @@ def createdisk(i):
             f.write("{'diskinfo.tmp':''}")
             f.close()
 
+# systeminfo
 def sysinfo():
     print("Processor: "+platform.processor())
 
+# remove file from Disk
 def DEL():
     i = input("Disk: ")
 
@@ -211,6 +220,7 @@ def DEL():
     else:
         print("Disk not found!")
 
+# change Username        
 def CUN(i):
     if not i == "":
         SYSData[0] = i
@@ -220,6 +230,7 @@ def CUN(i):
     else:
         print("That is not a valid username.");
 
+# save Sysdrive
 def leave():
     with open(SYSdrive,"w") as f:
         f.write(str(SYSData)+";drives="+str(drives))
