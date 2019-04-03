@@ -134,31 +134,30 @@ def coldrescue():
         cmd = input("COLDRESCUE$ ")
         if cmd == "init":
             i = input("Username: ")
-            with open(SYSdrive, "w") as f:
+            with open(SYSdrive,"w") as f:
                 f.write("['{}'];drives = ['']".format(i))
                 f.close()
         elif cmd == "read":
-            with open(SYSdrive, "r") as f:
+            with open(SYSdrive,"r") as f:
                 print(f.read())
                 f.close()
         elif cmd == "write":
             i = input("Data: ")
-            with open(SYSdrive, "w") as f:
+            with open(SYSdrive,"w") as f:
                 f.write(i)
                 f.close()
         elif cmd == "reboot":
             Boot()
         else:
-            print("Can't find command: " + cmd)
+            print("Can't find command: "+cmd)
 
-# ColdConsole
 def OS():
     global drives
     global SYSData
     try:
         try:
-            with open(SYSdrive, "r") as f:
-                exec ("SYSData = {}".format(f.read()), globals())
+            with open(SYSdrive,"r") as f:
+                exec("SYSData = {}".format(f.read()),globals())
                 f.close()
         except:
             clear()
