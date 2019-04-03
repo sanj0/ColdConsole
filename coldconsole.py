@@ -64,7 +64,7 @@ def mkfile():
     if i in drives:
         i += ".VD"
         j = get_arg_value("-f")
-        data = args[2]
+        data = args[4]
 
         if j == 'exit' or data == 'exit':
             pass
@@ -86,7 +86,7 @@ def mkfile():
 def ls():
     i = args[0]
     with open(i + ".VD", "r") as f:
-        exec ("for i in {}.keys(): print(i)".format(f.read()))
+        exec ("for i in {}.keys():print(i)".format(f.read()))
         f.close()
 
 # clear screen
