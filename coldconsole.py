@@ -27,14 +27,14 @@ manuals = {
     "createdisk": "creates a new virtual disk.",
     "disks": "prints out the names of all disks.",
     "sysinfo": "print out system info.",
-    "CUN": "renames the user.",
-    "mkfile": "creates a new file.",
-    "ls": "lists files of a disk",
-    "del": "deletes a file.",
+    "CUN": "renames the user. \n usage: cun NAME",
+    "mkfile": "creates a new file. \n usage: mkfile -d DISK -f NAME CONTENT",
+    "ls": "lists files of a disk \n usage: ls DISK",
+    "del": "deletes a file. \n usage: del -d DISK -f FILE",
     "clear": "clears the screen.",
     "shutdown": "shuts ColdConsole down.",
     "reboot": "reboots ColdConsole.",
-    "man": "prints a short manual of the given command."
+    "man": "prints a short manual of the given command. \n usage: man COMMAND"
 }
 
 # the last args that the user gave
@@ -46,26 +46,25 @@ def read():
     if i in drives:
         i += ".VD"
         j = get_arg_value("-f")
-        print(j)
 
         with open(i, "r") as f:
-            exec ("ddata=" + f.read(), globals())
+            exec("ddata=" + f.read(), globals())
             f.close()
         print(ddata[j])
 
     else:
-        print("Disk " + i + " not found!")
+        print("Disk" + i + " not found!")
 
 
 def mkfile():
-    i = input("Disk: ")
+    i = get_arg_value("-d")
     if i == 'exit':
         pass
 
     if i in drives:
         i += ".VD"
-        j = input("Filename: ")
-        data = input("Content: ")
+        j = get_arg_value("-f")
+        data = args[2]
 
         if j == 'exit' or data == 'exit':
             pass
@@ -80,11 +79,11 @@ def mkfile():
             f.write(str(ddata))
             f.close()
     else:
-        print("Disk not found!")
+        print("Disk" + i + " not found!")
 
 
 def ls():
-    i = input("Disk: ")
+    i = args[0]
     with open(i + ".VD", "r") as f:
         exec ("for i in {}.keys(): print(i)".format(f.read()))
         f.close()
@@ -208,11 +207,11 @@ def sysinfo():
 
 
 def DEL():
-    i = input("Disk: ")
+    i = get_arg_value("-d")
 
     if i in drives:
         i += ".VD"
-        j = input("Filename: ")
+        j = get_arg_value("-f")
 
         with open(i, "r") as f:
             exec ("ddata=" + f.read(), globals())
@@ -224,17 +223,18 @@ def DEL():
             f.write(str(ddata))
             f.close()
     else:
-        print("Disk not found!")
+        print("Disk" + i + " not found!")
 
 
-def CUN(i):
+def CUN():
+    i = args[0]
     if not i == "":
         SYSData[0] = i
         with open(SYSdrive, "w") as f:
             f.write(str(SYSData) + ";" + str(drives))
             f.close()
     else:
-        print("That is not a valid username.");
+        print(i + " is not a valid username.")
 
 
 def leave():
