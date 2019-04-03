@@ -1,5 +1,4 @@
-# coding=utf-8
-import os, platform, time
+import os,platform,time
 
 ostype = platform.system()
 SYSdrive = "DRIVE-E.VD"
@@ -41,6 +40,7 @@ manuals = {
 args = []
 
 
+# read file from disk
 def read():
     i = get_arg_value("-d")
     if i in drives:
@@ -53,9 +53,9 @@ def read():
         print(ddata[j])
 
     else:
-        print("Disk" + i + " not found!")
+        print("Disk not found!")
 
-
+# make a file on disk
 def mkfile():
     i = get_arg_value("-d")
     if i == 'exit':
@@ -82,20 +82,21 @@ def mkfile():
         print("Disk" + i + " not found!")
 
 
+# list files on disk
 def ls():
     i = args[0]
     with open(i + ".VD", "r") as f:
         exec ("for i in {}.keys(): print(i)".format(f.read()))
         f.close()
 
-
+# clear screen
 def clear():
     if ostype != "Windows":
         os.system("clear")
     else:
         os.system("cls")
 
-
+# Boot from System
 def Boot():
     try:
         clear()
@@ -150,7 +151,7 @@ def coldrescue():
         else:
             print("Can't find command: " + cmd)
 
-
+# ColdConsole
 def OS():
     global drives
     global SYSData
@@ -192,7 +193,7 @@ def OS():
         print(str(e))
         coldrescue()
 
-
+# make a Disk
 def createdisk(i):
     if not i.replace(" ", "") == "":
         if not i in drives:
@@ -201,11 +202,11 @@ def createdisk(i):
             f.write("{'diskinfo.tmp':''}")
             f.close()
 
-
+# systeminfo
 def sysinfo():
     print("Processor: " + platform.processor())
 
-
+# remove file from Disk
 def DEL():
     i = get_arg_value("-d")
 
@@ -225,7 +226,7 @@ def DEL():
     else:
         print("Disk" + i + " not found!")
 
-
+# change Username
 def CUN():
     i = args[0]
     if not i == "":
@@ -237,11 +238,11 @@ def CUN():
         print(i + " is not a valid username.")
 
 
+# save Sysdrive
 def leave():
     with open(SYSdrive, "w") as f:
         f.write(str(SYSData) + ";drives=" + str(drives))
         f.close()
-
 
 def commandparser(cmd):
     args.clear()
@@ -279,6 +280,7 @@ def man():
             if command == Key:
                 print(manuals[Key])
                 return True
+                break
         else:
             print("Can't find command: " + command)
 
