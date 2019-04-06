@@ -1,15 +1,18 @@
-import os,platform,time
+import os,platform,time,socket
+
+clientver = '1'
 
 ostype = platform.system()
 SYSdrive = "DRIVE-E.VD"
 protectedFiles = [SYSdrive]
 commands = {
+    "update": "update()",
     "read": "read()",
     "help": "for i in commands.keys():print(i)",
     "createdisk": "i=input('Disk: ');createdisk(i);leave()",
     "disks": "for drive in drives: print(drive)",
     "sysinfo": "sysinfo()",
-    "CUN": "i = input('Name: ');CUN(i)",
+    "CUN": "CUN()",
     "mkfile": "mkfile()",
     "ls": "ls()",
     "del": "DEL()",
@@ -22,6 +25,7 @@ commands = {
 
 # short descriptions for the commands, you can access them using "man"
 manuals = {
+    "update":"Updates ColdConsole.",
     "read": "reads out the contents of a file on a disk. \n usage: read -d DISK -f FILE",
     "help": "lists all commands.",
     "createdisk": "creates a new virtual disk.",
@@ -34,8 +38,7 @@ manuals = {
     "clear": "clears the screen.",
     "shutdown": "shuts ColdConsole down.",
     "reboot": "reboots ColdConsole.",
-    "man": "prints a short manual of the given command. \n usage: man COMMAND",
-    "writedoc": "Write a document."
+    "man": "prints a short manual of the given command. \n usage: man COMMAND"
 }
 
 # the last args that the user gave
@@ -70,7 +73,7 @@ def mkfile():
 
         if j == 'exit' or data == 'exit':
             pass
-            
+
         with open(i, "r") as f:
             exec ("ddata=" + f.read(), globals())
             f.close()
@@ -83,6 +86,34 @@ def mkfile():
     else:
         print("Disk" + i + " not found!")
 
+def update():
+    # Create a TCP/IP socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # Connect the socket to the port where the server is listening
+    server_address = ('95.90.225.117', 10000)
+    print('Connecting to {}:{}'.format(*server_address))
+    sock.connect(server_address)
+
+    try:
+        # Send data
+        message = clientver.encode()
+        print('Sending Version: {}'.format(message.decode()))
+        sock.sendall(message)
+
+        data = sock.recv(400000)
+        if data:
+            with open(os.path.basename(__file__),"w") as f:
+                f.write(data.decode())
+                f.close()
+
+    finally:
+        sock.close()
+        if data:
+            clear()
+            print("Closing Program in 2 secounds!")
+            time.sleep(2)
+            exit()
 
 # list files on disk
 def ls():
@@ -98,55 +129,13 @@ def clear():
     else:
         os.system("cls")
 
-def writedoc():
-    print("Write *exit to exit")
-    clear()
-    text = ""
-    textin = True
-    while(textin):
-        texttmp = input("");
-        if (texttmp == "*exit"):
-            textin = False
-        else:
-            text += (texttmp + "\n")
-    clear()
-    filenamevalid = False
-    while (filenamevalid == False):
-        filenametmp = input("Enter file name: ")
-        if (len(filenametmp) > 0):
-            filenamevalid = True
-            drivenamevalid = False
-            while (drivenamevalid == False):
-                drivenametmp = input("Enter drive name: ")
-                if drivenametmp in drives:
-                    i = drivenametmp + ".VD"
-                    j = filenametmp
-                    
-                    data = text
-                    
-                    with open(i, "r") as f:
-                        exec ("ddata=" + f.read(), globals())
-                        f.close()
-
-                    ddata[j] = data
-
-                    with open(i, "w") as f:
-                        f.write(str(ddata))
-                        f.close()
-                    clear()
-                    print("Your document has been saved!")
-                    drivenamevalid = True
-                else:
-                    print("This drive does not exist")
-        
 # Boot from System
 def Boot():
     try:
         clear()
-        print("███████████████████████████████████████")
-        print("██ ColdConsole is booting...         ██")
-        print("██ Press Ctrl+C to get to ColdRescue ██")
-        print("███████████████████████████████████████")
+        print("███████████████████████████████")
+        print("██ ColdConsole is booting... ██")
+        print("███████████████████████████████")
         if not os.path.isfile(SYSdrive):
             clear()
             print("CAN NOT FIND {}! PLEASE DO 'init' and 'reboot'!".format(SYSdrive))
@@ -162,15 +151,15 @@ def Boot():
 
 def coldrescue():
     print("██████████████████████████████████████████████████████████████████████")
-    print("████                                                              ████")
-    print("██        ____      _     _ ____                                    ██")
-    print("██       / ___|___ | | __| |  _ \ ___  ___  ___ _   _  ___          ██")
-    print("██      | |   / _ \| |/ _` | |_) / _ \/ __|/ __| | | |/ _ \         ██")
-    print("██      | |__| (_) | | (_| |  _ <  __/\__ \ (__| |_| |  __/         ██")
-    print("██       \____\___/|_|\__,_|_| \_\___||___/\___|\__,_|\___| (c)     ██")
-    print("██       Safemode for ColdConsole                                   ██")
-    print("██                                                                  ██")
-    print("████                                                              ████")
+    print("████░░░                                                        ░░░████")
+    print("██░░░     ____      _     _ ____                                 ░░░██")
+    print("██░░     / ___|___ | | __| |  _ \ ___  ___  ___ _   _  ___        ░░██")
+    print("██░     | |   / _ \| |/ _` | |_) / _ \/ __|/ __| | | |/ _ \        ░██")
+    print("██░     | |__| (_) | | (_| |  _ <  __/\__ \ (__| |_| |  __/        ░██")
+    print("██░      \____\___/|_|\__,_|_| \_\___||___/\___|\__,_|\___| (c)    ░██")
+    print("██░░     Safemode for ColdConsole                                 ░░██")
+    print("██░░░                                                            ░░░██")
+    print("████░░░                                                        ░░░████")
     print("██████████████████████████████████████████████████████████████████████")
 
     while True:
@@ -195,6 +184,7 @@ def coldrescue():
             print("Can't find command: "+cmd)
 
 def OS():
+    #update()
     global drives
     global SYSData
     try:
@@ -208,19 +198,20 @@ def OS():
             coldrescue()
 
         clear()
-        print("██████████████████████████████████████████████████████████████████████████████████████")
-        print("████    \__    __/                                                                ████")
-        print("██      /_/ /\ \_\        ____      _     _  ____                      _            ██")
-        print("██     __ \ \/ / __      / ___|___ | | __| |/ ___|___  _ __  ___  ___ | | ___       ██")
-        print("██     \_\_\/\/_/_/     | |   / _ \| |/ _` | |   / _ \| '_ \/ __|/ _ \| |/ _ \      ██")
-        print("██ __/\___\_\/_/___/\__ | |__| (_) | | (_| | |__| (_) | | | \__ \ (_) | |  __/      ██")
-        print("██   \/ __/_/\_\__ \/    \____\___/|_|\__,_|\____\___/|_| |_|___/\___/|_|\___| (c)  ██")
-        print("██     /_/ /\/\ \_\      Developed by CreepiYT                                      ██")
-        print("██      __/ /\ \__                                                                  ██")
-        print("██      \_\ \/ /_/                                                                  ██")
-        print("████     /      \                                                                 ████")
-        print("██████████████████████████████████████████████████████████████████████████████████████")
-
+        print("███████████████████████████████████████████████████████████████████████████████████████")
+        print("████░░░  \__    __/                                                             ░░░████")
+        print("██░░░    /_/ /\ \_\        ____      _     _  ____                      _         ░░░██")
+        print("██░░    __ \ \/ / __      / ___|___ | | __| |/ ___|___  _ __  ___  ___ | | ___     ░░██")
+        print("██░     \_\_\/\/_/_/     | |   / _ \| |/ _` | |   / _ \| '_ \/ __|/ _ \| |/ _ \     ░██")
+        print("██░ __/\___\_\/_/___/\__ | |__| (_) | | (_| | |__| (_) | | | \__ \ (_) | |  __/     ░██")
+        print("██░   \/ __/_/\_\__ \/    \____\___/|_|\__,_|\____\___/|_| |_|___/\___/|_|\___| (c) ░██")
+        print("██░     /_/ /\/\ \_\      Developed by CreepiYT                                     ░██")
+        print("██░░     __/ /\ \__                                                                ░░██")
+        print("██░░░    \_\ \/ /_/                                                               ░░░██")
+        print("████░░░   /      \                                                              ░░░████")
+        print("███████████████████████████████████████████████████████████████████████████████████████")
+        print("██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░Welcome {}!".format(SYSData[0]),end="")
+        print(("░"*(42-len(SYSData[0]))+"██"))
         while True:
             if not os.path.isfile(SYSdrive):
                 clear()
@@ -279,6 +270,48 @@ def CUN():
     else:
         print(i + " is not a valid username.")
 
+def writedoc():
+    clear()
+    print("Write *exit to exit")
+    text = ""
+    textin = True
+    line = 1
+    while(textin):
+        texttmp = input(str(line)+" | ");
+        if (texttmp == "*exit"):
+            textin = False
+        else:
+            line += 1
+            text += (texttmp + "\n")
+    clear()
+    filenamevalid = False
+    while (filenamevalid == False):
+        filenametmp = input("Enter file name: ")
+        if (len(filenametmp) > 0):
+            filenamevalid = True
+            drivenamevalid = False
+            while (drivenamevalid == False):
+                drivenametmp = input("Enter drive name: ")
+                if drivenametmp in drives:
+                    i = drivenametmp + ".VD"
+                    j = filenametmp
+
+                    data = text
+
+                    with open(i, "r") as f:
+                        exec ("ddata=" + f.read(), globals())
+                        f.close()
+
+                    ddata[j] = data
+
+                    with open(i, "w") as f:
+                        f.write(str(ddata))
+                        f.close()
+                    clear()
+                    print("Your document has been saved!")
+                    drivenamevalid = True
+                else:
+                    print("This drive does not exist")
 
 # save Sysdrive
 def leave():
