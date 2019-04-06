@@ -13,14 +13,15 @@ commands = {
     "disks": "for drive in drives: print(drive)",
     "sysinfo": "sysinfo()",
     "CUN": "CUN()",
-    "mkfile": "mkfile()",
+#    "mkfile": "mkfile()",
     "ls": "ls()",
     "del": "DEL()",
     "clear": "clear()",
     "shutdown": "leave();exit()",
     "reboot": "leave();Boot()",
     "man": "man()",
-    "writedoc": "writedoc()"
+    "write": "writedoc()",
+    "mount": "i=input('Drive: ');mount(i)"
 }
 
 # short descriptions for the commands, you can access them using "man"
@@ -55,36 +56,49 @@ def read():
         with open(i, "r") as f:
             exec("ddata=" + f.read(), globals())
             f.close()
-        print(ddata[j])
+
+        line = 1
+        string = ""
+
+        string += str(line)+ " | "
+
+        for i in ddata[j].replace("\n","|"):
+            string += i.replace("|","")
+
+            if i.find("|") != -1:
+                line += 1
+                string += "\n"
+                string += str(line)+ " | "
+        print(string)
 
     else:
         print("Disk not found!")
 
 # make a file on disk
-def mkfile():
-    i = get_arg_value("-d")
-    if i == 'exit':
-        pass
-
-    if i in drives:
-        i += ".VD"
-        j = get_arg_value("-f")
-        data = args[4]
-
-        if j == 'exit' or data == 'exit':
-            pass
-
-        with open(i, "r") as f:
-            exec ("ddata=" + f.read(), globals())
-            f.close()
-
-        ddata[j] = data
-
-        with open(i, "w") as f:
-            f.write(str(ddata))
-            f.close()
-    else:
-        print("Disk" + i + " not found!")
+#def mkfile():
+#    i = get_arg_value("-d")
+#    if i == 'exit':
+#        pass
+#
+#    if i in drives:
+#        i += ".VD"
+#        j = get_arg_value("-f")
+#        data = args[4]
+#
+#        if j == 'exit' or data == 'exit':
+#            pass
+#
+#        with open(i, "r") as f:
+#            exec ("ddata=" + f.read(), globals())
+#            f.close()
+#
+#        ddata[j] = data
+#
+#        with open(i, "w") as f:
+#            f.write(str(ddata))
+#            f.close()
+#    else:
+#        print("Disk" + i + " not found!")
 
 def update():
     # Create a TCP/IP socket
@@ -121,6 +135,23 @@ def ls():
     with open(i + ".VD", "r") as f:
         exec ("for i in {}.keys():print(i)".format(f.read()))
         f.close()
+
+def mount(i):
+    if not i.replace(" ", "") == "" and os.path.isfile(i+".VD"):
+        if not i in drives:
+            drives.append(i)
+
+    leave()
+
+    global SYSData
+    try:
+        with open(SYSdrive,"r") as f:
+            exec("SYSData = {}".format(f.read()),globals())
+            f.close()
+    except:
+        clear()
+        print("{} is corrupted! Please do 'init' and 'reboot'!".format(SYSdrive))
+        coldrescue()
 
 # clear screen
 def clear():
@@ -281,8 +312,10 @@ def writedoc():
         if (texttmp == "*exit"):
             textin = False
         else:
+            if not line == 1:
+                text += "\n"
             line += 1
-            text += (texttmp + "\n")
+            text += texttmp
     clear()
     filenamevalid = False
     while (filenamevalid == False):
