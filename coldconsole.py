@@ -16,7 +16,8 @@ commands = {
     "clear": "clear()",
     "shutdown": "leave();exit()",
     "reboot": "leave();Boot()",
-    "man": "man()"
+    "man": "man()",
+    "writedoc": "writedoc()"
 }
 
 # short descriptions for the commands, you can access them using "man"
@@ -33,7 +34,8 @@ manuals = {
     "clear": "clears the screen.",
     "shutdown": "shuts ColdConsole down.",
     "reboot": "reboots ColdConsole.",
-    "man": "prints a short manual of the given command. \n usage: man COMMAND"
+    "man": "prints a short manual of the given command. \n usage: man COMMAND",
+    "writedoc": "Write a document."
 }
 
 # the last args that the user gave
@@ -68,7 +70,7 @@ def mkfile():
 
         if j == 'exit' or data == 'exit':
             pass
-
+            
         with open(i, "r") as f:
             exec ("ddata=" + f.read(), globals())
             f.close()
@@ -96,6 +98,47 @@ def clear():
     else:
         os.system("cls")
 
+def writedoc():
+    print("Write *exit to exit")
+    clear()
+    text = ""
+    textin = True
+    while(textin):
+        texttmp = input("");
+        if (texttmp == "*exit"):
+            textin = False
+        else:
+            text += (texttmp + "\n")
+    clear()
+    filenamevalid = False
+    while (filenamevalid == False):
+        filenametmp = input("Enter file name: ")
+        if (len(filenametmp) > 0):
+            filenamevalid = True
+            drivenamevalid = False
+            while (drivenamevalid == False):
+                drivenametmp = input("Enter drive name: ")
+                if drivenametmp in drives:
+                    i = drivenametmp + ".VD"
+                    j = filenametmp
+                    
+                    data = text
+                    
+                    with open(i, "r") as f:
+                        exec ("ddata=" + f.read(), globals())
+                        f.close()
+
+                    ddata[j] = data
+
+                    with open(i, "w") as f:
+                        f.write(str(ddata))
+                        f.close()
+                    clear()
+                    print("Your document has been saved!")
+                    drivenamevalid = True
+                else:
+                    print("This drive does not exist")
+        
 # Boot from System
 def Boot():
     try:
