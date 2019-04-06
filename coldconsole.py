@@ -13,14 +13,13 @@ commands = {
     "disks": "for drive in drives: print(drive)",
     "sysinfo": "sysinfo()",
     "CUN": "CUN()",
-    "mkfile": "mkfile()",
     "ls": "ls()",
     "del": "DEL()",
     "clear": "clear()",
     "shutdown": "leave();exit()",
     "reboot": "leave();Boot()",
     "man": "man()",
-    "writedoc": "writedoc()"
+    "write": "writedoc()"
 }
 
 # short descriptions for the commands, you can access them using "man"
@@ -271,6 +270,18 @@ def CUN():
         print(i + " is not a valid username.")
 
 def writedoc():
+    i = get_arg_value("-d")
+    if i == 'exit':
+        pass
+
+    if i in drives:
+        i += ".VD"
+        j = get_arg_value("-f")
+        data = args[4]
+
+        if j == 'exit' or data == 'exit':
+            pass
+    
     clear()
     print("Write *exit to exit")
     text = ""
@@ -286,12 +297,12 @@ def writedoc():
     clear()
     filenamevalid = False
     while (filenamevalid == False):
-        filenametmp = input("Enter file name: ")
+        filenametmp = j
         if (len(filenametmp) > 0):
             filenamevalid = True
             drivenamevalid = False
             while (drivenamevalid == False):
-                drivenametmp = input("Enter drive name: ")
+                drivenametmp = i
                 if drivenametmp in drives:
                     i = drivenametmp + ".VD"
                     j = filenametmp
