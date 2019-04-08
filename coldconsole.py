@@ -237,9 +237,15 @@ def OS():
         clear()
         login = True
 
+        print("Please input your password to login.")
+        print("Type *exit to leave.")
+
         while login:
-            print("Please input your password to login.")
             passw = input("Password > ")
+            if passw == "*exit":
+                leave()
+                exit()
+
             if passw == SYSData[1]:
                 login = not login
                 clear()
