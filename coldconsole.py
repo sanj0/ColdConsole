@@ -6,6 +6,7 @@ ostype = platform.system()
 SYSdrive = "DRIVE-E.VD"
 protectedFiles = [SYSdrive]
 commands = {
+    "exec": "print('Use Python!');i = input('> ');exec(i)",
     "update": "update()",
     "read": "read()",
     "help": "for i in commands.keys():print(i)",
@@ -141,17 +142,21 @@ def mount(i):
         if not i in drives:
             drives.append(i)
 
-    leave()
+            leave()
 
-    global SYSData
-    try:
-        with open(SYSdrive,"r") as f:
-            exec("SYSData = {}".format(f.read()),globals())
-            f.close()
-    except:
-        clear()
-        print("{} is corrupted! Please do 'init' and 'reboot'!".format(SYSdrive))
-        coldrescue()
+            global SYSData
+            try:
+                with open(SYSdrive,"r") as f:
+                    exec("SYSData = {}".format(f.read()),globals())
+                    f.close()
+                print("Successfully mounted drive "+i)
+            except:
+                clear()
+                print("{} is corrupted! Please do 'init' and 'reboot'!".format(SYSdrive))
+                coldrescue()
+
+        else:
+            print("Couldn't mount drive "+i)
 
 # clear screen
 def clear():
@@ -197,18 +202,19 @@ def coldrescue():
         cmd = input("COLDRESCUE$ ")
         if cmd == "init":
             i = input("Username: ")
+            j = input("Password: ")
             with open(SYSdrive,"w") as f:
-                f.write("['{}'];drives = ['']".format(i))
+                f.write("['{0}','{1}'];drives = ['']".format(i,j))
                 f.close()
-        elif cmd == "read":
-            with open(SYSdrive,"r") as f:
-                print(f.read())
-                f.close()
-        elif cmd == "write":
-            i = input("Data: ")
-            with open(SYSdrive,"w") as f:
-                f.write(i)
-                f.close()
+#        elif cmd == "read":
+#            with open(SYSdrive,"r") as f:
+#                print(f.read())
+#                f.close()
+#        elif cmd == "write":
+#            i = input("Data: ")
+#            with open(SYSdrive,"w") as f:
+#                f.write(i)
+#                f.close()
         elif cmd == "reboot":
             Boot()
         else:
@@ -229,6 +235,17 @@ def OS():
             coldrescue()
 
         clear()
+        login = True
+
+        while login:
+            print("Please input your password to login.")
+            passw = input("Password > ")
+            if passw == SYSData[1]:
+                login = not login
+                clear()
+            else:
+                print("Wrong Password!")
+
         print("███████████████████████████████████████████████████████████████████████████████████████")
         print("████░░░  \__    __/                                                             ░░░████")
         print("██░░░    /_/ /\ \_\        ____      _     _  ____                      _         ░░░██")
@@ -243,6 +260,8 @@ def OS():
         print("███████████████████████████████████████████████████████████████████████████████████████")
         print("██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░Welcome {}!".format(SYSData[0]),end="")
         print(("░"*(42-len(SYSData[0]))+"██"))
+        print("███████████████████████████████████████████████████████████████████████████████████████")
+
         while True:
             if not os.path.isfile(SYSdrive):
                 clear()
@@ -268,7 +287,8 @@ def createdisk(i):
 
 # systeminfo
 def sysinfo():
-    print("Processor: " + platform.processor())
+    print("Processor: " + platform.processor()[0:36].replace("64","").replace("32",""))
+    print("Processor Type: " + platform.processor()[5:7] + "x")
 
 # remove file from Disk
 def DEL():
@@ -303,10 +323,14 @@ def CUN():
 
 def writedoc():
     clear()
-    print("Write *exit to exit")
+    print("█████████████████████████")
+    print("██ Write *exit to exit ██")
+    print("█████████████████████████")
+
     text = ""
     textin = True
     line = 1
+
     while(textin):
         texttmp = input(str(line)+" | ");
         if (texttmp == "*exit"):
@@ -316,14 +340,17 @@ def writedoc():
                 text += "\n"
             line += 1
             text += texttmp
+
     clear()
     filenamevalid = False
+
     while (filenamevalid == False):
         filenametmp = input("Enter file name: ")
         if (len(filenametmp) > 0):
             filenamevalid = True
             drivenamevalid = False
-            while (drivenamevalid == False):
+            drivenametmp = ""
+            while (drivenamevalid == False and drivenametmp != "*exit"):
                 drivenametmp = input("Enter drive name: ")
                 if drivenametmp in drives:
                     i = drivenametmp + ".VD"
