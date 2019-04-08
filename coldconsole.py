@@ -8,12 +8,13 @@ protectedFiles = [SYSdrive]
 commands = {
     "exec": "print('Use Python!');i = input('> ');exec(i)",
     "update": "update()",
-    "read": "read()",
+    "read": "print(read())",
     "help": "for i in commands.keys():print(i)",
     "createdisk": "i=input('Disk: ');createdisk(i);leave()",
     "disks": "for drive in drives: print(drive)",
     "sysinfo": "sysinfo()",
     "CUN": "CUN()",
+    "execscript":"execscript()",
 #    "mkfile": "mkfile()",
     "ls": "ls()",
     "del": "DEL()",
@@ -27,6 +28,8 @@ commands = {
 
 # short descriptions for the commands, you can access them using "man"
 manuals = {
+    "exec":"executes code",
+    "execscript":"executes a file",
     "update":"Updates ColdConsole.",
     "read": "reads out the contents of a file on a disk. \n usage: read -d DISK -f FILE",
     "help": "lists all commands.",
@@ -40,12 +43,27 @@ manuals = {
     "clear": "clears the screen.",
     "shutdown": "shuts ColdConsole down.",
     "reboot": "reboots ColdConsole.",
-    "man": "prints a short manual of the given command. \n usage: man COMMAND"
+    "man": "prints a short manual of the given command. \n usage: man COMMAND",
+    "mount": "mounts a disk."
 }
 
 # the last args that the user gave
 args = []
 
+def execscript():
+    i = input("Drive: ")
+    if i in drives:
+        i += ".VD"
+        j = input("File: ")
+
+        with open(i, "r") as f:
+            exec("ddata=" + f.read(), globals())
+            f.close()
+
+        exec(ddata[j])
+
+    else:
+        print("Disk not found!")
 
 # read file from disk
 def read():
@@ -70,7 +88,7 @@ def read():
                 line += 1
                 string += "\n"
                 string += str(line)+ " | "
-        print(string)
+        return string
 
     else:
         print("Disk not found!")
